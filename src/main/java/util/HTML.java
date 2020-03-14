@@ -1,12 +1,14 @@
 package util;
 
+import org.jsoup.nodes.Document;
+
 import java.util.Objects;
 
 public class HTML {
-    private String html;
+    private Document html;
     private Link url;
 
-    public HTML(String html, Link url) {
+    public HTML(Document html, Link url) {
         this.html = html;
         this.url = url;
     }
@@ -17,6 +19,10 @@ public class HTML {
 
     @Override
     public String toString() {
+        return html.html();
+    }
+
+    public Document toDocument() {
         return html;
     }
 
