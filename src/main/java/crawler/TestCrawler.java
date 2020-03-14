@@ -19,17 +19,13 @@ public class TestCrawler {
 
             document = Jsoup.connect(rootURL2).get();
             zzz.addAll(new DefaultCrawler().crawl(new HTML(document, new Link(rootURL))));
-
-            for (Link each : zzz) {
-                System.out.println(each);
-            }
+            for (Link each : zzz) System.out.println(each);
             System.out.println("--------------------------------sss--------------------------------");
-            List<Link> temp = new DefaultLinkFilter().filter(zzz,rootURL);
 
-            for (Link each : temp) {
-                System.out.println(each);
-            }
-            } catch (IOException e) {
+            List<Link> temp = new DefaultLinkFilter().filter(zzz, rootURL);
+            for (Link each : temp) System.out.println(each);
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
