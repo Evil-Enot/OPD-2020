@@ -10,7 +10,7 @@ import java.util.List;
 
 public class TestCrawler {
     public static String rootURL1 = "https://jsoup.org/";
-    public static String rootURL2 = "https://github.com/Kvarki-rM/KotlinAsFirst2018/";
+    public static String rootURL2 = "https://www.computeruniverse.net/de/";
 
     public static void main(String[] args) {
         try {

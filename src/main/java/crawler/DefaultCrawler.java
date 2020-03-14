@@ -14,38 +14,43 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class DefaultCrawler implements Crawler {
-
+    List<Link> dateList = new ArrayList<>();
     Link domain = new Link("");
+    int count = 0;
 
     @Override
     public List<Link> crawl(@NotNull HTML html) {
         domain = html.getUrl();
         List<Link> dateList = new ArrayList<>();
-        reCrawl(html, dateList);
+        reCrawl(html);
         return dateList;
     }
 
-    private void reCrawl(@NotNull HTML html, List<Link> dateList) {
+    private void reCrawl(@NotNull HTML html) {
         Elements linksOnPage = html.toDocument().select("a[href]");
         for (Element page : linksOnPage) {
             Link url = new Link(page.attr("abs:href"));
-            if (!url.toString().contains("#"))
-                if (!(url == domain) && url.contains(domain) && !dateList.contains(url)) {
-                    dateList.add(url);
-                    try {
-                        System.out.println(url);
-                        Document doc = Jsoup.connect(url.toString())
-                                .ignoreContentType(true)
-                                .ignoreHttpErrors(true)
-                                .timeout(1000 * 5)
-                                .get();
-                        reCrawl(new HTML(doc, url), dateList);
+            if (act(url, dateList)) {
+                System.out.println(url);
+                dateList.add(url);
+                try {
+                    Document doc = Jsoup.connect(url.toString())
+                            .ignoreContentType(true)
+                            .ignoreHttpErrors(true)
+                            .timeout(1000 * 5)
+                            .get();
+                    reCrawl(new HTML(doc, url));
 
-                    } catch (NullPointerException | IOException e) {
-                        e.printStackTrace();
-                    }
+                } catch (NullPointerException | IOException e) {
+                    e.printStackTrace();
                 }
+            }
         }
+    }
+
+    boolean act(@NotNull Link url, List<Link> dateList) {
+        return !url.toString().contains("#") && !(url == domain) &&
+                url.contains(domain) && !dateList.contains(url);
     }
 }
 
