@@ -31,7 +31,7 @@ public class DefaultScraper implements Scraper {
     private HTML scrape(Link link) {
         // TODO
         try {
-            return new HTML(Jsoup.connect(link.toString()).get().toString(), link);
+            return new HTML(Jsoup.connect(link.toString()).get(), link);
         } catch (IOException e) {
             e.printStackTrace();
         }
