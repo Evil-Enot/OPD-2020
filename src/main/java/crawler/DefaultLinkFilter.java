@@ -1,6 +1,7 @@
 package crawler;
 
 import org.jetbrains.annotations.NotNull;
+import util.HTML;
 import util.Link;
 
 import java.util.ArrayList;
