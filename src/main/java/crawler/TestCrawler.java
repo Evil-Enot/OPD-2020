@@ -17,7 +17,6 @@ public class TestCrawler {
             Document document = Jsoup.connect(rootURL).get();
             List<Link> zzz = new DefaultCrawler().crawl(new HTML(document, new Link(rootURL)));
 
-
             document = Jsoup.connect(rootURL2).get();
             zzz.addAll(new DefaultCrawler().crawl(new HTML(document, new Link(rootURL))));
 
