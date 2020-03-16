@@ -7,14 +7,20 @@ import java.util.Objects;
 public class HTML {
     private Document html;
     private Link url;
+    private String language;
 
     public HTML(Document html, Link url) {
         this.html = html;
         this.url = url;
+        this.language = this.html.selectFirst("html").attr("lang");
     }
 
     public Link getUrl() {
         return url;
+    }
+
+    public String getLanguage() {
+        return language;
     }
 
     @Override
