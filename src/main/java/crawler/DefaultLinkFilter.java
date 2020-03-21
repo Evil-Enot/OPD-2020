@@ -1,16 +1,8 @@
 package crawler;
 
-<<<<<<< HEAD
 import utils.Link;
 
 import org.jetbrains.annotations.NotNull;
-import utils.Link;
-
-=======
-import org.jetbrains.annotations.NotNull;
-import util.Link;
-
->>>>>>> 11cc3b5d5a67acd9b7688b79ca4d30c7290780f9
 import java.util.ArrayList;
 import java.util.List;
 

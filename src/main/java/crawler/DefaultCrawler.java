@@ -1,11 +1,15 @@
 package crawler;
 
+import org.jetbrains.annotations.NotNull;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import utils.Html;
 import utils.Link;
 
+import javax.net.ssl.SSLProtocolException;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -13,12 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.jetbrains.annotations.NotNull;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import javax.net.ssl.SSLProtocolException;
 
 public class DefaultCrawler implements Crawler {
     List<Link> dateList = new ArrayList<>();

@@ -12,8 +12,10 @@ import extractor.WordFilter;
 import utils.Html;
 import utils.Link;
 
+
+import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -95,10 +97,16 @@ public class SiteParser {
                         () -> crawler.crawl(html),
                         EXECUTOR_SERVICE);
                 crawlerFuture.thenAccept(result -> linkQueue.addAll(linkFilter.filter(result, domain)));
-                CompletableFuture<Set<String>> extractorFuture = CompletableFuture.supplyAsync(
+                CompletableFuture<Collection<String>> extractorFuture = CompletableFuture.supplyAsync(
                         () -> extractor.extract(html),
                         EXECUTOR_SERVICE);
-                extractorFuture.thenAccept(result -> db.insertAll(wordFilter.filter(result), domain));
+                extractorFuture.thenAccept(result -> {
+                    try {
+                        db.insertAll(wordFilter.filter(result), domain);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

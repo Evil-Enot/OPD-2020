@@ -1,9 +1,13 @@
 package extractor;
 
+
 import utils.Html;
 
-import java.util.Set;
+import java.util.Collection;
+
+
+
 
 public interface Extractor {
-    Set<String> extract(Html html);
+    Collection<String> extract(Html html);
 }
