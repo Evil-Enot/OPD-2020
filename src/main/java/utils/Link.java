@@ -1,5 +1,7 @@
 package utils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
@@ -38,5 +40,9 @@ public class Link {
     @Override
     public int hashCode() {
         return Objects.hash(absoluteURL);
+    }
+
+    public boolean contains(@NotNull Link url) {
+        return absoluteURL.contains(url.toString());
     }
 }

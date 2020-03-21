@@ -2,15 +2,20 @@ package utils;
 
 import org.jsoup.nodes.Document;
 
+import org.jsoup.nodes.Document;
+
 import java.util.Objects;
+
 
 public class Html {
     private Document html;
     private Link url;
+    private String language;
 
     public Html(Document html, Link url) {
         this.html = html;
         this.url = url;
+        this.language = this.html.selectFirst("html").attr("lang");
     }
 
     public Html(String html, Link url) {
@@ -20,6 +25,10 @@ public class Html {
 
     public Link getUrl() {
         return url;
+    }
+
+    public String getLanguage() {
+        return language;
     }
 
     @Override
