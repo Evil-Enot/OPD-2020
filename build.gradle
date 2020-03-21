@@ -28,4 +28,5 @@ dependencies {
     compile 'org.jetbrains:annotations:13.0'
     implementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
     implementation 'org.seleniumhq.selenium:selenium-chrome-driver:3.141.59'
+    testCompile "com.github.tomakehurst:wiremock-jre8:2.26.3"
 }
