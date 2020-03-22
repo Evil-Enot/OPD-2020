@@ -1,6 +1,5 @@
-package scraper;
+package main;
 
-import main.SiteParser;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -10,30 +9,27 @@ import utils.Link;
 
 import java.util.concurrent.BlockingQueue;
 
-public class DefaultScraper implements Scraper {
-
+public class ScrapeHandler {
     private BlockingQueue<Link> linkQueue;
     private BlockingQueue<Html> HtmlQueue;
+    volatile boolean isWorking = true;
+
     WebDriver driver;
-    public volatile boolean isWorking = true;
-    SiteParser p;
 
-    public DefaultScraper(BlockingQueue<Link> linkQueue, BlockingQueue<Html> HtmlQueue) {
+
+    public ScrapeHandler(BlockingQueue<Link> linkQueue, BlockingQueue<Html> htmlQueue) {
+
         this.linkQueue = linkQueue;
-        this.HtmlQueue = HtmlQueue;
+        HtmlQueue = htmlQueue;
     }
 
-    public void p(SiteParser p) {
-        this.p = p;
-    }
     public void start() throws InterruptedException {
         do {
             isWorking = false;
-            var t = doWhatIToldYou();
+            var t = scrape(linkQueue.take());
             isWorking = true;
-            if (t == null) break;
             HtmlQueue.add(t);
-        } while (true);
+        } while (!HtmlQueue.isEmpty() || !linkQueue.isEmpty());
         System.out.println("Scraper is ready");
     }
 
@@ -47,14 +43,6 @@ public class DefaultScraper implements Scraper {
             return new Html(driver.getPageSource(), new Link(driver.getCurrentUrl()));
         } finally {
             driver.quit();
-        }
-    }
-
-    private synchronized Html doWhatIToldYou() throws InterruptedException {
-        if (linkQueue.size() == 0 && !p.isWorking) {
-            return null;
-        } else {
-            return scrape(linkQueue.take());
         }
     }
 }

@@ -10,7 +10,11 @@ public class Link {
     private String absoluteURL;
 
     public Link(String absoluteURL) {
-        this.absoluteURL = absoluteURL;
+        if (!absoluteURL.contains("//")) {
+            this.absoluteURL = "http://" + absoluteURL;
+        } else {
+            this.absoluteURL = absoluteURL;
+        }
     }
 
     public String getDomain() {

@@ -1,20 +1,19 @@
 package extractor;
 
 import org.junit.jupiter.api.Test;
-import util.HTML;
-import util.Link;
-
+import utils.Html;
+import utils.Link;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DefaultExtractorWithDefaultWordFilterTest {
 
     Link l = new Link("");
-    HTML h = new HTML("<!DOCTYPE html>\n" +
+    Html h = new Html("<!DOCTYPE html>\n" +
             "<html>\n" +
             "<head>\n" +
             "\t<title>be1.ru</title>\n" +

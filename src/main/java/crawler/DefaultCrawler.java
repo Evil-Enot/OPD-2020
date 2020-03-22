@@ -1,18 +1,12 @@
 package crawler;
 
 import org.jetbrains.annotations.NotNull;
-import org.jsoup.HttpStatusException;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import utils.Html;
 import utils.Link;
 
-import javax.net.ssl.SSLProtocolException;
 import java.io.IOException;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -29,18 +23,20 @@ public class DefaultCrawler implements Crawler {
 
     static {
         try {
-            langDate = new ArrayList<>(Files.readAllLines(Paths.get("src\\main\\resources\\language.txt")));
-            FileDate = new ArrayList<>(Files.readAllLines(Paths.get("src\\main\\resources\\tagfiles.txt")));
+            langDate = new ArrayList<>(Files.readAllLines(Paths.get("src/main/resources/language.txt")));
+            FileDate = new ArrayList<>(Files.readAllLines(Paths.get("src/main/resources/tagfiles.txt")));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public List<Link> crawl(@NotNull Html html) {
-        lang = html.getLanguage();
-        domain = html.getUrl();
-        reCrawl(html);
-        return dateList;
+        System.out.println("CRAWL");
+        throw new NullPointerException();
+//        var res = html.toDocument().select("a[href]")
+//                .stream().map(it -> new Link(lastCharFixer(it.attr("abs:href")))).collect(Collectors.toList());
+//        System.out.println(res);
+//        return res;
     }
 
     private void reCrawl(@NotNull Html html) {
@@ -48,34 +44,13 @@ public class DefaultCrawler implements Crawler {
         for (Element page : linksOnPage) {
             Link url = new Link(lastCharFixer(page.attr("abs:href")));
             if (act(url, dateList)) {
-                System.out.println(url);
+//                System.out.println(url);
                 count++;
                 dateList.add(url);
-                try {
-                    Document doc = Jsoup.connect(url.toString())
-                            .ignoreContentType(true)
-                            .ignoreHttpErrors(true)
-                            .maxBodySize(0)
-                            .timeout(5 * 1000)
-                            .get();
-                    reCrawl(new Html(doc, url));
-                } catch (SocketTimeoutException e) {
-                    System.out.println("Превышено время подключения(.timeout(5 * 1000)) " + url);
-                } catch (SSLProtocolException e) {
-                    System.out.println("SLProtocolException");
-                } catch (HttpStatusException e) {
-                    System.out.println("Ошибка 404??? " + url);
-                } catch (UnknownHostException e) {
-                    System.out.println("UnknownHostException - нет инета");
-                } catch (NullPointerException | IOException e) {
-                    System.out.println(url);
-                    e.printStackTrace();
-                }
             }
         }
 
     }
-
 
     public String lastCharFixer(@NotNull String inURL) {
         if (inURL.charAt(inURL.length() - 1) == "/".charAt(0))

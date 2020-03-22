@@ -4,16 +4,22 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 public class DefaultWordFilter implements WordFilter {
 
     @Override
-    public Collection<String> filter(Collection<String> words) throws IOException {
+    public Collection<String> filter(Collection<String> words) {
         Collection<String> newSet = setToLowerCase(punctuationMarkFilter(words));
         deleteBlankLines(newSet);
-        unnecessaryWordsFilter(newSet);
+        try {
+            unnecessaryWordsFilter(newSet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return newSet;
     }
 
@@ -22,7 +28,7 @@ public class DefaultWordFilter implements WordFilter {
     // Кпд данного метода не определен из-за кодировок
 
     public static void unnecessaryWordsFilter(Collection<String> set) throws IOException {
-        String fileName = "src\\main\\resources\\ListOfWordsForFiltration.txt";
+        String fileName = "src/main/resources/ListOfWordsForFiltration.txt";
 
         String content = Files.lines(Paths.get(fileName), StandardCharsets.UTF_8).reduce("", String::concat);
         String[] stringsArray = content.split("\\s");

@@ -1,7 +1,6 @@
 package utils;
 
-import org.jsoup.nodes.Document;
-
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.util.Objects;
@@ -19,7 +18,7 @@ public class Html {
     }
 
     public Html(String html, Link url) {
-        this.html = new Document(html);
+        this.html = Jsoup.parse(html);
         this.url = url;
     }
 

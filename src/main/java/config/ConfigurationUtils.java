@@ -2,9 +2,13 @@ package config;
 
 import org.openqa.selenium.chrome.ChromeOptions;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
+import java.util.logging.Level;
 
 public class ConfigurationUtils {
     public static void configure() {
@@ -22,6 +26,9 @@ public class ConfigurationUtils {
         System.setProperty("project.path", projectPath);
 
         ConfigurationUtils.setConsoleEncoding();
+
+        System.setProperty("webdriver.chrome.silentOutput", "true");
+        java.util.logging.Logger.getLogger("org.openqa.selenium").setLevel(Level.OFF);
     }
 
     // last properties files override first
