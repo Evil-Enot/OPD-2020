@@ -74,4 +74,11 @@ public class ScraperTest {
         );
         assertTrue(html.toString().length() != 0);
     }
+
+    @Test
+    void shouldFindInfoOnHttpOrUseHttpsByDefault() {
+        var html = scraper.scrape(new Link("https://ruwi-dachdecker.de"));
+        var html2 = scraper.scrape(new Link("http://ruwi-dachdecker.de"));
+        assertEquals(html, html2);
+    }
 }

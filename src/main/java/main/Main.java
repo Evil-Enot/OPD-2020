@@ -26,6 +26,10 @@ public class Main {
     public static Logger consoleLog = LoggerFactory.getLogger("STDOUT");
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
+        defaultRun();
+    }
+
+    public static void defaultRun() throws ExecutionException, InterruptedException {
         ConfigurationUtils.configure();
 
         var csvParser = new CSVParser();
@@ -68,6 +72,45 @@ public class Main {
             Main.debugLog.info("Main task completed");
             exec.shutdown();
             dbExec.shutdown();
+            scraper.quit();
+        }
+    }
+
+    public static Collection[] runWithoutWordsExtracting(Link domain) throws ExecutionException, InterruptedException {
+        ConfigurationUtils.configure();
+
+        var scraper = new DefaultScraper();
+        var crawler = new DefaultCrawler();
+        var linkFilter = new DefaultLinkFilter();
+        var linkQueue = new LinkedBlockingDeque<Link>();
+
+        var numberOfThreads = Integer.parseInt(System.getProperty("threads.number"));
+        var exec = (ThreadPoolExecutor) Executors.newFixedThreadPool(numberOfThreads);
+        var cs = new ExecutorCompletionService<Collection[]>(exec);
+
+        try {
+            var allLinks = new HashSet<Link>();
+            var filteredLinks = new HashSet<Link>();
+            cs.submit(new LinkCrawlingTask(scraper, crawler, linkFilter, domain, linkQueue)::run);
+            submittedTasksCount.incrementAndGet();
+            // order is important
+            while (completedTaskCount.get() - submittedTasksCount.get() != 0 || linkQueue.size() != 0) {
+                var link = linkQueue.poll(50, TimeUnit.MILLISECONDS);
+                if (link != null) {
+                    cs.submit(new LinkCrawlingTask(scraper, crawler, linkFilter, link, linkQueue)::run);
+                    submittedTasksCount.incrementAndGet();
+                }
+                var wordsFuture = cs.poll(50, TimeUnit.MILLISECONDS);
+                if (wordsFuture != null) {
+                    var future = wordsFuture.get();
+                    allLinks.addAll(future[0]);
+                    filteredLinks.addAll(future[1]);
+                }
+            }
+            return new Collection[] { allLinks, filteredLinks };
+        } finally {
+            Main.debugLog.info("Main task completed");
+            exec.shutdown();
             scraper.quit();
         }
     }

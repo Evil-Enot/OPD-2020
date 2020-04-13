@@ -128,4 +128,26 @@ public class LinkFilterTest {
                 new Link("github.com"));
         assertEquals(1, filtered.size());
     }
+
+    @Test
+    void shouldNotConsiderLinksWithFragmentDifferent2() {
+        var filtered = linkFilter.filter(
+                Set.of(
+                        new Link("https://www.am-computer.com/doku#workflows-prozesse"),
+                        new Link("https://www.am-computer.com/doku#e-mail-archivierung")
+                ),
+                new Link("www.am-computer.com"));
+        assertEquals(1, filtered.size());
+    }
+
+    @Test
+    void shouldNotConsiderLinksWithDifferentProtocolsDifferent() {
+        var filtered = linkFilter.filter(
+                Set.of(
+                        new Link("https://www.les-graveurs.de"),
+                        new Link("http://www.les-graveurs.de")
+                ),
+                new Link("les-graveurs.de"));
+        assertEquals(1, filtered.size());
+    }
 }
